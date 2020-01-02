@@ -39,55 +39,49 @@ EString::EString(int number, int radix)
     tmp = nullptr;
 }
 
-EString EString::operator+(const EString &str)
+EString& EString::operator+(const EString &str)
 {
-    EString newString(this->mString + str.mString);
-    return newString;
+    this->mString = this->mString + str.mString;
+    return *this;
 }
 
-EString EString::operator+(const string &str)
+EString& EString::operator+(const string &str)
 {
-    EString newString(this->mString + str);
-    return newString;
+    this->mString += str;
+    return *this;
 }
 
-EString EString::operator+(const char *str)
+EString& EString::operator+(const int &number)
 {
-    string tmpSrMemory = str;
-    EString newString(this->mString + tmpSrMemory);
-    return newString;
+    this->mString = this->mString + to_string(number);
+    return *this;
 }
 
-EString EString::operator+(const int &number)
+EString& EString::operator+(const char *str)
 {
-    EString newString(this->mString + to_string(number));
-    return newString;
+    this->mString += str;
+    return *this;
 }
 
-EString EString::operator=(const char *str)
-{
-    EString a(str);
-    this->mString = str;
-    return a;
-}
-
-EString EString::operator=(const string &str)
+EString& EString::operator=(const string &str)
 {
     this->mString = str;
-    EString newString(str);
-    return newString;
+    return *this;
+}
+
+EString& EString::operator=(const char *str)
+{
+    this->mString = str;
+    return *this;
+}
+
+EString& EString::operator=(const EString &str)
+{
+    this->mString = str.mString;
+    return *this;
 }
 
 bool EString::operator==(const EString &str)
-{
-    if(str.mString == this->mString)
-    {
-        return true;
-    }
-    return false;
-}
-
-bool EString::operator==(const char *str)
 {
     if(cmpStr(this->mString,str))
     {
@@ -98,23 +92,14 @@ bool EString::operator==(const char *str)
 
 bool EString::operator==(const string &str)
 {
-    if(this->mString == str)
+    if(cmpStr(this->mString,str))
     {
         return true;
     }
     return false;
 }
 
-bool EString::operator!=(const EString &str)
-{
-    if(this->mString == str.mString)
-    {
-        return false;
-    }
-    return true;
-}
-
-bool EString::operator!=(const char *str)
+bool EString::operator!=(const string &str)
 {
     if(cmpStr(this->mString,str))
     {
@@ -143,16 +128,50 @@ const char *EString::toCharPoint()
     return this->mString.data();
 }
 
+int EString::indexOf(const EString &str, int from)
+{
+    return this->mString.find(str.mString.c_str(),from);
+}
+
+EString EString::mid(int position, int n)
+{
+    string tmpStr = this->mString.substr(position,n);
+    EString newString(tmpStr);
+    return tmpStr;
+}
+
+EString &EString::repelace(const EString &before,const  EString &after)
+{
+    const string& old_value = before.mString;
+    const string& new_value = after.mString;
+    string& str = this->mString;
+
+    for(string::size_type   pos(0);   pos!=string::npos;   pos+=new_value.length())   {
+                if(   (pos=str.find(old_value,pos))!=string::npos   )
+                    str.replace(pos,old_value.length(),new_value);
+                else   break;
+            }
+    return *this;
+}
+
 int EString::getIntWidth(int &number)
 {
 
     return 1+log10(number);
 }
-
-bool EString::cmpStr(const string &str1, const char *str2)
+/*
+bool EString::cmpStr(const string &str1, const string &str2)
 {
-    int size = sizeof (str2);
-    if(memcmp(&str1,str2,size) == 0)
+    if(str1 == str2)
+    {
+        return true;
+    }
+    return false;
+}
+*/
+bool EString::cmpStr(const string &str1, const EString &str2)
+{
+    if(str1 == str2.mString)
     {
         return true;
     }

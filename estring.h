@@ -7,6 +7,24 @@
 using namespace std;
 class EString
 {
+    friend ostream&  operator<<(ostream& out ,EString& str)
+    {
+        cout<<str.mString;
+        return out;
+    }
+    friend istream&  operator>>(istream& in  ,EString& str)
+    {
+        cin>>str.mString;
+        return in;
+    }
+    friend bool      operator==(const EString& str1,const EString& str2)
+    {
+        if(str1.mString == str2.mString)
+        {
+            return true;
+        }
+        return false;
+    }
 public:
     //init function()
     EString();
@@ -17,30 +35,33 @@ public:
     EString(int number,int radix = 10);
 
     //overload operator function:
-    EString operator+(const EString& str);
-    EString operator+(const string& str);
-    EString operator+(const char* str);
-    EString operator+(const int& number);
-
-    EString operator=(const char* str);
-    EString operator=(const string& str);
-
+    EString& operator+(const EString& str);
+    EString& operator+(const string& str);
+    EString& operator+(const int& number);
+    EString& operator+(const char* str);
+    EString& operator=(const string& str);
+    EString& operator=(const char* str);
+    EString& operator=(const EString& str);
     bool operator==(const EString& str);
-    bool operator==(const char* str);
     bool operator==(const string& str);
+    bool operator!=(const string& str);
 
-    bool operator!=(const EString& str);
-    bool operator!=(const char* str);
+
     //normal function:
-    int    getLength();   //获取字符串长度
-    string toStdstring(); //转string对象
-    int    toInt();
-    const char* toCharPoint();
+    int             getLength();   //获取字符串长度
+    string          toStdstring(); //转string对象
+    int             toInt();
+    const char*     toCharPoint();
+
+    int             indexOf(const EString& str,int from = 0);
+    EString         mid(int position,int n = -1);
+    EString&        repelace(const EString& before,const EString& after);
 private:
     string mString;
 
     //private function:
-    int getIntWidth(int& number);
-    bool cmpStr(const string& str1,const char* str2);
+    int  getIntWidth(int& number);
+//    bool cmpStr(const string& str1,const string& str2);
+    bool cmpStr(const string& str1, const EString& str2);
 };
 #endif // ESTRING_H
