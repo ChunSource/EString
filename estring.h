@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string.h>
 #include <cmath>
+#include <vector>
 using namespace std;
 class EString
 {
@@ -30,8 +31,8 @@ public:
     EString();
     EString(EString const &estring);
     EString(string str);
-    EString(char* data);
-    EString(char* data, int dataSize);
+    EString(const char* data);
+    EString(const char* data, int dataSize);
     EString(int number,int radix = 10);
 
     //overload operator function:
@@ -56,12 +57,12 @@ public:
     int             indexOf(const EString& str,int from = 0);
     EString         mid(int position,int n = -1);
     EString&        repelace(const EString& before,const EString& after);
+    vector<EString>   split(const char* delim);
 private:
     string mString;
 
     //private function:
     int  getIntWidth(int& number);
-//    bool cmpStr(const string& str1,const string& str2);
     bool cmpStr(const string& str1, const EString& str2);
 };
 #endif // ESTRING_H

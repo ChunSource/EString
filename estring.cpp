@@ -15,12 +15,12 @@ EString::EString(string str)
     this->mString = str;
 }
 
-EString::EString(char *data)
+EString::EString(const char *data)
 {
     this->mString = data;
 }
 
-EString::EString(char *data, int dataSize)
+EString::EString(const char *data, int dataSize)
 {
     this->mString = string(data,dataSize);
 }
@@ -159,16 +159,7 @@ int EString::getIntWidth(int &number)
 
     return 1+log10(number);
 }
-/*
-bool EString::cmpStr(const string &str1, const string &str2)
-{
-    if(str1 == str2)
-    {
-        return true;
-    }
-    return false;
-}
-*/
+
 bool EString::cmpStr(const string &str1, const EString &str2)
 {
     if(str1 == str2.mString)
@@ -176,4 +167,30 @@ bool EString::cmpStr(const string &str1, const EString &str2)
         return true;
     }
     return false;
+}
+
+vector<EString> EString::split(const char* delim)
+{
+    const char* s = this->mString.data();
+ //   const char* delim = sep.mString.data();
+
+    vector<EString> list;
+    if (s && strlen(s))
+    {
+        int len = strlen(s);
+        char *src = new char[len + 1];
+        strcpy(src, s);
+        src[len] = '\0';
+        char *tokenptr = strtok(src, delim);
+        while (tokenptr != NULL)
+        {
+            std::string tk = tokenptr;
+            list.emplace_back(tk);
+            tokenptr = strtok(NULL, delim);
+        }
+        delete[] src;
+    }
+
+    return list;
+    
 }
