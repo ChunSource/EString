@@ -81,6 +81,12 @@ EString& EString::operator=(const EString &str)
     return *this;
 }
 
+EString& EString::operator+=(const EString& str)
+{
+    *this = *this + str;
+    return *this;
+}
+
 bool EString::operator==(const EString &str)
 {
     if(cmpStr(this->mString,str))

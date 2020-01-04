@@ -43,6 +43,7 @@ public:
     EString& operator=(const string& str);
     EString& operator=(const char* str);
     EString& operator=(const EString& str);
+    EString& operator+=(const EString& str);
     bool operator==(const EString& str);
     bool operator==(const string& str);
     bool operator!=(const string& str);
