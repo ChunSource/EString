@@ -1,4 +1,15 @@
-#include "estring.h"
+﻿#include "estring.h"
+
+#ifndef WIN32
+ size_t strlen(const char *s)
+ {
+         const char *sc;
+ 
+         for (sc = s; *sc != '\0'; ++sc)
+                 /* nothing */;
+         return sc - s;
+ }
+#endif
 
 EString::EString()
 {
@@ -29,12 +40,19 @@ EString::EString(int number, int radix)
 {
     if(radix == 10)
     {
-        this->mString = to_string(number);
+        this->mString = std::to_string(number);
         return;
     }
-    int width = getIntWidth(number);  //根据数字的位数自动设置
+    int width = getIntWidth(number); //根据数字的位数自动设置
     char *tmp = new char[width];
-    this->mString = itoa(number,tmp,radix);
+    //this->mString = _itoa(number,tmp,radix);
+    #ifdef WIN32
+		_itoa_s(number, tmp, width, radix);
+	#else
+		sprintf(tmp,"%d",width);
+	#endif
+    
+    this->mString = string(tmp);
     delete[] tmp;
     tmp = nullptr;
 }
@@ -185,14 +203,36 @@ vector<EString> EString::split(const char* delim)
     {
         int len = strlen(s);
         char *src = new char[len + 1];
-        strcpy(src, s);
+        //strcpy(src, s);
+        #ifdef WIN32
+        strcpy_s(src, len + 1, s);
+        #else
+        memcpy(src,s,len+1);
+        #endif
+        
         src[len] = '\0';
-        char *tokenptr = strtok(src, delim);
+        //char *tokenptr = strtok(src, delim);
+        char* context = nullptr;
+
+        char *tokenptr = nullptr;
+        #ifdef WIN32
+        tokenptr = strtok_s(src, delim, &context);
+        #else
+        tokenptr = strtok(src,s);
+        #endif
+
         while (tokenptr != NULL)
         {
             std::string tk = tokenptr;
             list.emplace_back(tk);
-            tokenptr = strtok(NULL, delim);
+
+        #ifdef WIN32
+        tokenptr = strtok_s(NULL, delim,&context);
+        #else
+        tokenptr = strtok(NULL,delim);
+        #endif
+
+            
         }
         delete[] src;
     }

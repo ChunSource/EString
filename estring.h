@@ -2,6 +2,8 @@
 #define ESTRING_H
 
 #include <iostream>
+#include <string>
+#include <cstring>
 #include <string.h>
 #include <cmath>
 #include <vector>
@@ -50,8 +52,10 @@ public:
 
 
     //normal function:
-    int             getLength();   //获取字符串长度
-    string          toStdstring(); //转string对象
+    //获取字符串长度 
+    int             getLength();   
+    //转string对象 
+    string          toStdstring(); 
     int             toInt();
     const char*     toCharPoint();
 
